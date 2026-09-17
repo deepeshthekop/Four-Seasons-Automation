@@ -22,12 +22,20 @@ class CartComponent {
         const priceText = await disclaimer.$('./..').$('span.text-subtitle2').getText();
         const price = priceText.match(/^([A-Z]{3})\s+([\d,]+(?:\.\d+)?)$/);
         if (!price) throw new Error(`Cannot read cart room price: ${priceText}`);
+        const text = await item.getText();
+        const occupancyLine = text.split('\n').find(line => /^\d+ adults?\b/.test(line));
+        if (!occupancyLine) throw new Error(`Cannot read cart occupancy: ${text}`);
         return {
             roomName: await item.$('span.text-subtitle2').getText(),
             ratePlan: await item.$('span.text-caption').getText(),
             currency: price[1],
             displayedPrice: price[2],
-            text: await item.getText()
+            occupancy: {
+                adults: Number(occupancyLine.match(/^(\d+) adults?\b/)[1]),
+                // The cart omits the child count when no children are included.
+                children: Number(occupancyLine.match(/(\d+) (?:children|child)\b/)?.[1] ?? 0)
+            },
+            text
         };
     }
 }

@@ -5,9 +5,10 @@ import cart from '../components/cart.component.js';
 import consent from '../components/consent.component.js';
 import { booking } from '../data/booking.data.js';
 import { futureStay } from '../utils/dates.js';
+import { stayRoomAmountRange } from '../utils/pricing.js';
 
 describe('Cabo Del Sol room cart', () => {
-    it('preserves the selected room, rate and displayed price in the cart', async () => {
+    it('shows the selected room and rate in the cart with pricing consistent with the displayed nightly rate', async () => {
         const stay = futureStay(booking.daysAhead, booking.nights);
         console.log(`Stay: ${stay.arrival} to ${stay.departure}`);
         await directory.open();
@@ -25,28 +26,21 @@ describe('Cabo Del Sol room cart', () => {
         expect(search.get('generalReservationForm.locationId')).toBe(booking.propertyCode);
         expect(search.get('generalReservationForm.checkInDate')).toBe(stay.arrival);
         expect(search.get('generalReservationForm.checkOutDate')).toBe(stay.departure);
-        expect(search.get('generalReservationForm.guestCountPerRoom[0].adultCount')).toBe('2');
-        expect(search.get('generalReservationForm.guestCountPerRoom[0].childCount')).toBe('0');
+        expect(search.get('generalReservationForm.guestCountPerRoom[0].adultCount')).toBe(String(booking.adults));
+        expect(search.get('generalReservationForm.guestCountPerRoom[0].childCount')).toBe(String(booking.children));
         const selected = await accommodations.addAvailableRoom();
         await cart.open();
         await expect(cart.tab).toHaveText('Cart (1)');
         await expect(cart.panel.$('h3')).toHaveText(booking.propertyName);
         const actual = await cart.readRoom();
         console.log(`Cart: ${JSON.stringify(actual)}`);
-        expect(actual.roomName === selected.roomName || actual.roomName.startsWith(`${selected.roomName} - `)).toBe(true);
+        const escapedRoomName = selected.roomName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        expect(actual.roomName).toMatch(new RegExp(`^${escapedRoomName}(?: - .+)?$`));
         expect(actual.ratePlan).toBe(selected.ratePlan);
-        expect(actual.text).toContain('2 adults');
+        expect(actual.occupancy).toEqual({ adults: booking.adults, children: booking.children });
         expect(actual.currency).toBe(selected.currency);
-        const nightlyText = selected.nightlyPrice.replaceAll(',', '');
-        const nightlyPrice = Number(nightlyText);
-        const decimalPlaces = nightlyText.split('.')[1]?.length ?? 0;
-        const halfDisplayUnit = 0.5 * 10 ** -decimalPlaces;
+        const { minimum, maximum } = stayRoomAmountRange(selected.nightlyPrice, booking.nights);
         const roomAmount = Number(actual.displayedPrice.replaceAll(',', ''));
-        // The nightly display is rounded; the cart holds the stay amount with cents, so direct
-        // equality is invalid. Scale its rounding interval [price - half unit, price + half unit)
-        // by the nights, comparing only the room amount, never Est. Total or taxes/fees.
-        const minimum = (nightlyPrice - halfDisplayUnit) * booking.nights;
-        const maximum = (nightlyPrice + halfDisplayUnit) * booking.nights;
         console.log(`Room price consistency: ${actual.currency} ${roomAmount} in [${minimum}, ${maximum})`);
         expect(roomAmount).toBeGreaterThanOrEqual(minimum);
         expect(roomAmount).toBeLessThan(maximum);

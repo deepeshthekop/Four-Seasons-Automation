@@ -4,6 +4,8 @@ class AvailabilityComponent {
 
     async selectDate(label) {
         const day = $(`button[aria-label$="${label}"]`);
+        // Bounded for this scenario's 30-day lead time and two-night stay.
+        // Dates more than three month advances away are not supported here.
         for (let month = 0; month < 3 && !(await day.isDisplayed()); month++) {
             await $('button[aria-label="Next month"]').click();
         }
