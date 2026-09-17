@@ -3,8 +3,7 @@ import resort from '../pages/resort.page.js';
 import accommodations from '../pages/accommodations.page.js';
 import cart from '../components/cart.component.js';
 import consent from '../components/consent.component.js';
-import { booking } from '../data/booking.data.js';
-import { futureStay } from '../utils/dates.js';
+import { booking, futureStay } from '../data/booking.data.js';
 import { stayRoomAmountRange } from '../utils/pricing.js';
 
 describe('Cabo Del Sol room cart', () => {
@@ -12,14 +11,14 @@ describe('Cabo Del Sol room cart', () => {
         const stay = futureStay(booking.daysAhead, booking.nights);
         console.log(`Stay: ${stay.arrival} to ${stay.departure}`);
         await directory.open();
-        await consent.dismissIfPresent();
+        const consentAccepted = await consent.dismissIfPresent();
         await directory.selectProperty(booking.directoryName);
         await expect(browser).toHaveUrl(expect.stringContaining(booking.propertyPath));
         await expect(resort.heading).toHaveText('Cabo Del Sol', { ignoreCase: true });
-        await consent.dismissIfPresent();
-        await resort.availability.setStay(stay);
-        await expect(resort.availability.dates).toHaveText(expect.stringContaining(stay.summary));
-        await resort.availability.checkRates();
+        if (!consentAccepted) await consent.dismissIfPresent();
+        await resort.setStay(stay);
+        await expect(resort.dates).toHaveText(expect.stringContaining(stay.summary));
+        await resort.checkRates();
         await expect(browser).toHaveUrl(expect.stringContaining('/cabodelsol/accommodations/'));
         await expect($('h1')).toHaveText('Cabo San Lucas Luxury Accommodations', { ignoreCase: true });
         const search = new URL(await browser.getUrl()).searchParams;
