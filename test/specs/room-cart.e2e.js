@@ -35,13 +35,7 @@ describe('Cabo Del Sol room cart', () => {
         await expect(cart.panel.$('h3')).toHaveText(booking.propertyName);
         const actual = await cart.readRoom();
         console.log(`Cart: ${JSON.stringify(actual)}`);
-        let cartRoomName = actual.roomName;
-        const bedSuffixPrefix = `${selected.roomName} - `;
-        if (cartRoomName.startsWith(bedSuffixPrefix)) {
-            const bedDescription = cartRoomName.slice(bedSuffixPrefix.length);
-            expect(bedDescription).not.toBe('');
-            cartRoomName = cartRoomName.slice(0, selected.roomName.length);
-        }
+        const cartRoomName = actual.roomName.split(' - ')[0];
         expect(cartRoomName).toBe(selected.roomName);
         expect(actual.ratePlan).toBe(selected.ratePlan);
         expect(actual.occupancy).toEqual({ adults: booking.adults, children: booking.children });
