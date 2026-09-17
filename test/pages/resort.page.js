@@ -7,7 +7,12 @@ class ResortPage {
         const day = $(`button[aria-label$="${label}"]`);
         // Bounded for this scenario's 30-day lead time and two-night stay.
         // Dates more than three month advances away are not supported here.
-        for (let month = 0; month < 3 && !(await day.isDisplayed()); month++) {
+        const maximumMonthAdvances = 3;
+        for (let month = 0; month < maximumMonthAdvances; month++) {
+            const targetDateIsVisible = await day.isDisplayed();
+            if (targetDateIsVisible) {
+                break;
+            }
             await $('button[aria-label="Next month"]').click();
         }
         await day.waitForEnabled({ timeout: 30000 });

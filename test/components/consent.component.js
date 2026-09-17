@@ -5,7 +5,9 @@ class ConsentComponent {
         try {
             await accept.waitForDisplayed({ timeout: 8000 });
         } catch (error) {
-            if (!(await accept.isDisplayed())) return false;
+            if (!(await accept.isDisplayed())) {
+                return false;
+            }
             throw error;
         }
         await accept.click();

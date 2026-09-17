@@ -15,7 +15,9 @@ describe('Cabo Del Sol room cart', () => {
         await directory.selectProperty(booking.directoryName);
         await expect(browser).toHaveUrl(expect.stringContaining(booking.propertyPath));
         await expect(resort.heading).toHaveText('Cabo Del Sol', { ignoreCase: true });
-        if (!consentAccepted) await consent.dismissIfPresent();
+        if (!consentAccepted) {
+            await consent.dismissIfPresent();
+        }
         await resort.setStay(stay);
         await expect(resort.dates).toHaveText(expect.stringContaining(stay.summary));
         await resort.checkRates();
@@ -33,8 +35,14 @@ describe('Cabo Del Sol room cart', () => {
         await expect(cart.panel.$('h3')).toHaveText(booking.propertyName);
         const actual = await cart.readRoom();
         console.log(`Cart: ${JSON.stringify(actual)}`);
-        const escapedRoomName = selected.roomName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        expect(actual.roomName).toMatch(new RegExp(`^${escapedRoomName}(?: - .+)?$`));
+        let cartRoomName = actual.roomName;
+        const bedSuffixPrefix = `${selected.roomName} - `;
+        if (cartRoomName.startsWith(bedSuffixPrefix)) {
+            const bedDescription = cartRoomName.slice(bedSuffixPrefix.length);
+            expect(bedDescription).not.toBe('');
+            cartRoomName = cartRoomName.slice(0, selected.roomName.length);
+        }
+        expect(cartRoomName).toBe(selected.roomName);
         expect(actual.ratePlan).toBe(selected.ratePlan);
         expect(actual.occupancy).toEqual({ adults: booking.adults, children: booking.children });
         expect(actual.currency).toBe(selected.currency);

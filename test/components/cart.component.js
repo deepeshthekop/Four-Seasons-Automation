@@ -4,10 +4,19 @@ class CartComponent {
 
     async open() {
         // Adding a stay navigates to Discover. Wait for the new page and cart update.
-        await browser.waitUntil(async () =>
-            new URL(await browser.getUrl()).pathname === '/cabodelsol/discover/' &&
-            (await $('#shopping_cart_icon').getText()).includes('(1)'),
-        { timeout: 45000, timeoutMsg: 'Added stay did not appear in the cart indicator' });
+        await browser.waitUntil(async () => {
+            const currentUrl = new URL(await browser.getUrl());
+            const isDiscoverPage = currentUrl.pathname === '/cabodelsol/discover/';
+            if (!isDiscoverPage) {
+                return false;
+            }
+
+            const cartIndicator = await $('#shopping_cart_icon').getText();
+            return cartIndicator.includes('(1)');
+        }, {
+            timeout: 45000,
+            timeoutMsg: 'Added stay did not appear in the cart indicator'
+        });
         await $('.LoadingIndicator').waitForDisplayed({ reverse: true, timeout: 30000 });
         await $('#shopping_cart_icon').waitForClickable();
         await $('#shopping_cart_icon').click();
@@ -18,25 +27,46 @@ class CartComponent {
 
     async readRoom() {
         const disclaimer = await this.panel.$('[data-cy="shopping-cart-item__taxes-and-fees"]');
-        const item = await disclaimer.$('./ancestor::div[.//button[normalize-space(.)="Remove"]][1]');
-        const priceText = await disclaimer.$('./..').$('span.text-subtitle2').getText();
-        const price = priceText.match(/^([A-Z]{3})\s+([\d,]+(?:\.\d+)?)$/);
-        if (!price) throw new Error(`Cannot read cart room price: ${priceText}`);
+        // Find the enclosing removable cart item rather than reading unrelated panel text.
+        const cartItemSelector = './ancestor::div[.//button[normalize-space(.)="Remove"]][1]';
+        const item = await disclaimer.$(cartItemSelector);
+        const priceContainer = await disclaimer.$('./..');
+        const priceText = await priceContainer.$('span.text-subtitle2').getText();
+        // Example: "CAD 5,098.71"
+        const priceMatch = priceText.match(/^([A-Z]{3})\s+([\d,]+(?:\.\d+)?)$/);
+        if (!priceMatch) {
+            throw new Error(`Cannot read cart room price: ${priceText}`);
+        }
+
+        const currency = priceMatch[1];
+        const displayedPrice = priceMatch[2];
         const text = await item.getText();
-        const occupancyLine = text.split('\n').find(line => /^\d+ adults?\b/.test(line));
-        if (!occupancyLine) throw new Error(`Cannot read cart occupancy: ${text}`);
-        return {
-            roomName: await item.$('span.text-subtitle2').getText(),
-            ratePlan: await item.$('span.text-caption').getText(),
-            currency: price[1],
-            displayedPrice: price[2],
-            occupancy: {
-                adults: Number(occupancyLine.match(/^(\d+) adults?\b/)[1]),
-                // The cart omits the child count when no children are included.
-                children: Number(occupancyLine.match(/(\d+) (?:children|child)\b/)?.[1] ?? 0)
-            },
-            text
-        };
+        const occupancy = this.readOccupancy(text);
+        const roomName = await item.$('span.text-subtitle2').getText();
+        const ratePlan = await item.$('span.text-caption').getText();
+
+        return { roomName, ratePlan, currency, displayedPrice, occupancy, text };
+    }
+
+    readOccupancy(text) {
+        const lines = text.split('\n');
+        for (const line of lines) {
+            const adultsMatch = line.match(/^(\d+) adults?\b/);
+            if (!adultsMatch) {
+                continue;
+            }
+
+            const adults = Number(adultsMatch[1]);
+            const childrenMatch = line.match(/(\d+) (?:children|child)\b/);
+            let children = 0;
+            // The cart omits the child count when no children are included.
+            if (childrenMatch) {
+                children = Number(childrenMatch[1]);
+            }
+
+            return { adults, children };
+        }
+        throw new Error(`Cannot read cart occupancy: ${text}`);
     }
 }
 export default new CartComponent();

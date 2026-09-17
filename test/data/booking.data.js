@@ -15,14 +15,33 @@ export function futureStay(daysAhead, nights) {
     arrival.setDate(arrival.getDate() + daysAhead);
     const departure = new Date(arrival);
     departure.setDate(departure.getDate() + nights);
-    const iso = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    const label = date => date.toLocaleDateString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
-    });
-    const summary = date => date.toLocaleDateString('en-US', {
-        month: 'long', day: 'numeric', year: 'numeric'
-    }).replace(',', '');
-    return { arrival: iso(arrival), departure: iso(departure),
-        arrivalLabel: label(arrival), departureLabel: label(departure),
-        summary: `Selected Dates ${summary(arrival)} to ${summary(departure)}` };
+
+    function formatUrlDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatCalendarLabel(date) {
+        return date.toLocaleDateString('en-US', {
+            weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+        });
+    }
+
+    function formatSummaryDate(date) {
+        return date.toLocaleDateString('en-US', {
+            month: 'long', day: 'numeric', year: 'numeric'
+        }).replace(',', '');
+    }
+
+    const arrivalSummary = formatSummaryDate(arrival);
+    const departureSummary = formatSummaryDate(departure);
+    return {
+        arrival: formatUrlDate(arrival),
+        departure: formatUrlDate(departure),
+        arrivalLabel: formatCalendarLabel(arrival),
+        departureLabel: formatCalendarLabel(departure),
+        summary: `Selected Dates ${arrivalSummary} to ${departureSummary}`
+    };
 }
