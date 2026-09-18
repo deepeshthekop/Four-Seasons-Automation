@@ -3,14 +3,24 @@ class HotelDirectoryPage {
     await browser.url("/find_a_hotel_or_resort/");
   }
   async selectProperty(name) {
-    const links = await $$(`a=${name}`);
-    for (const link of links) {
-      if (await link.isDisplayed()) {
-        await link.click();
-        return;
-      }
+    const directoryContent = $(
+      "#all-hotels-resorts-hotel-tab.IconTabContainer-page--active",
+    );
+    const northAmericaButton = directoryContent.$("button*=North America");
+    await northAmericaButton.waitForDisplayed();
+
+    const regionId = await northAmericaButton.getAttribute("aria-controls");
+    const isExpanded = await northAmericaButton.getAttribute("aria-expanded");
+    if (isExpanded === "false") {
+      await northAmericaButton.click();
     }
-    throw new Error(`No visible directory link for ${name}`);
+
+    const northAmericaRegion = directoryContent.$(
+      `[role="region"][id="${regionId}"]`,
+    );
+    const propertyLink = northAmericaRegion.$(`a=${name}`);
+    await propertyLink.waitForDisplayed();
+    await propertyLink.click();
   }
 }
 export default new HotelDirectoryPage();
