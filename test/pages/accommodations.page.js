@@ -31,7 +31,12 @@ class AccommodationsPage {
       }
 
       const selected = await this.readRoomAndRate(button);
-      console.log(`Selected: ${JSON.stringify(selected)}`);
+      console.log(
+        `Selected room:
+        Room: ${selected.roomName}
+        Rate: ${selected.ratePlan}
+        Average nightly price: ${selected.currency} ${selected.nightlyPrice}`,
+      );
       await button.click();
       return selected;
     }

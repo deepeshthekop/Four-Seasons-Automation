@@ -52,7 +52,13 @@ describe("Cabo Del Sol room cart", () => {
     await expect(cart.tab).toHaveText("Cart (1)");
     await expect(cart.panel.$("h3")).toHaveText(booking.propertyName);
     const actual = await cart.readRoom();
-    console.log(`Cart: ${JSON.stringify(actual)}`);
+    console.log(
+      `Cart:
+      Room: ${actual.roomName}
+      Rate: ${actual.ratePlan}
+      Occupancy: ${actual.occupancy.adults} adults, ${actual.occupancy.children} children
+      Room amount: ${actual.currency} ${actual.displayedPrice}`,
+    );
     const cartRoomName = actual.roomName.split(" - ")[0];
     expect(cartRoomName).toBe(selected.roomName);
     expect(actual.ratePlan).toBe(selected.ratePlan);
@@ -67,7 +73,10 @@ describe("Cabo Del Sol room cart", () => {
     );
     const roomAmount = Number(actual.displayedPrice.replaceAll(",", ""));
     console.log(
-      `Room price consistency: ${actual.currency} ${roomAmount} in [${minimum}, ${maximum})`,
+      `Price verification:
+      Displayed nightly price: ${selected.currency} ${selected.nightlyPrice}
+      Expected room amount: ${selected.currency} ${minimum} to ${maximum}
+      Actual room amount: ${actual.currency} ${actual.displayedPrice}`,
     );
     expect(roomAmount).toBeGreaterThanOrEqual(minimum);
     expect(roomAmount).toBeLessThan(maximum);
