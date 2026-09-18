@@ -59,10 +59,24 @@ npm ci
 
 | Command                | Purpose                                               |
 | ---------------------- | ----------------------------------------------------- |
-| `npm run wdio`         | Run the complete E2E scenario in Chrome               |
+| `npm run wdio`         | Run the complete E2E scenario in headed Chrome        |
 | `npm run lint`         | Check JavaScript source and configuration with ESLint |
 | `npm run format`       | Format project files with Prettier                    |
 | `npm run format:check` | Verify formatting without changing files              |
+
+Local `npm run wdio` uses headed Chrome. Native headless mode remains optional on macOS/Linux:
+
+```sh
+HEADLESS=true npm run wdio
+```
+
+## CI/CD
+
+The GitHub Actions workflow in `.github/workflows/e2e.yml` installs dependencies with `npm ci`, checks formatting, runs ESLint, and executes the E2E scenario in headed Chrome on Ubuntu 24.04 with Node.js 24 and one browser worker. WebdriverIO automatically supplies an Xvfb virtual display when no Linux display is available; CI does not enable Chrome native headless mode.
+
+Native headless execution returned **Access Denied** during local verification against Four Seasons. CI therefore uses normal headed Chrome with the virtual display. GitHub-hosted execution still needs verification and remains subject to the production site's access controls.
+
+It runs on pushes to `main`, pull requests targeting `main`, manual dispatch, and Mondays at 07:17 UTC. The weekly schedule is an example scheduled execution against the live production website. If the E2E step fails, available `artifacts/` diagnostics are uploaded; missing diagnostics do not cause another failure.
 
 ## Design decisions
 

@@ -25,7 +25,11 @@ export const config = {
     {
       browserName: "chrome",
       "goog:chromeOptions": {
-        args: ["--window-size=1440,1000", "--lang=en-US"],
+        args: [
+          "--window-size=1440,1000",
+          "--lang=en-US",
+          ...(process.env.HEADLESS === "true" ? ["--headless"] : []),
+        ],
       },
     },
   ],
