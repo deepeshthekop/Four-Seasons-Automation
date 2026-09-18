@@ -13,6 +13,7 @@ export function futureStay(daysAhead, nights) {
   const arrival = new Date();
   arrival.setHours(12, 0, 0, 0);
   arrival.setDate(arrival.getDate() + daysAhead);
+
   const departure = new Date(arrival);
   departure.setDate(departure.getDate() + nights);
 
@@ -20,6 +21,7 @@ export function futureStay(daysAhead, nights) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
+
     return `${year}-${month}-${day}`;
   }
 
@@ -44,6 +46,7 @@ export function futureStay(daysAhead, nights) {
 
   const arrivalSummary = formatSummaryDate(arrival);
   const departureSummary = formatSummaryDate(departure);
+
   return {
     arrival: formatUrlDate(arrival),
     departure: formatUrlDate(departure),

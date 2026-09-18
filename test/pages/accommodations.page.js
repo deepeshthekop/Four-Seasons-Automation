@@ -31,15 +31,18 @@ class AccommodationsPage {
       }
 
       const selected = await this.readRoomAndRate(button);
+
       console.log(
         `Selected room:
         Room: ${selected.roomName}
         Rate: ${selected.ratePlan}
         Average nightly price: ${selected.currency} ${selected.nightlyPrice}`,
       );
+
       await button.click();
       return selected;
     }
+
     throw new Error("No visible, enabled Add to Cart action found");
   }
 
@@ -52,6 +55,7 @@ class AccommodationsPage {
     const roomCard = await button.$(roomCardSelector);
     const rateCard = await button.$(rateCardSelector);
     const priceText = await rateCard.getText();
+
     // Example: "Avg. price per night\nCAD 2,549"
     const priceMatch = priceText.match(
       /Avg\. price per night\s+([A-Z]{3})\s+([\d,]+(?:\.\d+)?)/,
@@ -68,6 +72,7 @@ class AccommodationsPage {
     const ratePlan = await rateCard.$("p").getText();
     const currency = priceMatch[1];
     const nightlyPrice = priceMatch[2];
+
     if (!roomName || !ratePlan) {
       throw new Error("Selected room/rate identity is empty");
     }
@@ -75,4 +80,5 @@ class AccommodationsPage {
     return { roomName, ratePlan, currency, nightlyPrice, priceText };
   }
 }
+
 export default new AccommodationsPage();

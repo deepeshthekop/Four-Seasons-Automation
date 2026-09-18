@@ -2,11 +2,13 @@ class HotelDirectoryPage {
   async open() {
     await browser.url("/find_a_hotel_or_resort/");
   }
+
   async selectProperty(name) {
     const directoryContent = $(
       "#all-hotels-resorts-hotel-tab.IconTabContainer-page--active",
     );
     const northAmericaButton = directoryContent.$("button*=North America");
+
     await northAmericaButton.waitForDisplayed();
 
     const regionId = await northAmericaButton.getAttribute("aria-controls");
@@ -19,8 +21,10 @@ class HotelDirectoryPage {
       `[role="region"][id="${regionId}"]`,
     );
     const propertyLink = northAmericaRegion.$(`a=${name}`);
+
     await propertyLink.waitForDisplayed();
     await propertyLink.click();
   }
 }
+
 export default new HotelDirectoryPage();
