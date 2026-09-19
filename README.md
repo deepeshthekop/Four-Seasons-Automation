@@ -1,5 +1,10 @@
 # Four Seasons QA Automation Assessment
 
+![WebdriverIO](https://img.shields.io/badge/WebdriverIO-9-EA5906?logo=webdriverio&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-24-339933?logo=nodedotjs&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES%20Modules-F7DF1E?logo=javascript&logoColor=black)
+[![CI](https://github.com/deepeshthekop/Four-Seasons-Automation/actions/workflows/e2e.yml/badge.svg)](https://github.com/deepeshthekop/Four-Seasons-Automation/actions/workflows/e2e.yml)
+
 A JavaScript/WebdriverIO E2E framework for the QA Automation Engineer technical assessment. The single scenario covers the required Four Seasons Resort Cabo Del Sol booking/cart flow on the public production website. It stops at cart verification without completing a booking or submitting payment.
 
 ## Automated scenario
@@ -82,7 +87,7 @@ It runs on pushes to `main`, pull requests targeting `main`, manual dispatch, an
 
 - Page objects and components keep UI interactions separate from test assertions.
 - Dates are calculated relative to today, and the test does not depend on a specific room always being available.
-- The room and rate are captured from the same card as the selected bookable action.
+- Room, rate, and pricing details are captured from the same room/rate context as the selected Add to Cart action.
 - Condition-based waits cover visibility, enabled controls, navigation, loading indicators, and cart updates; there are no fixed sleeps.
 - Consent is accepted when present. If initially absent, it is checked again on the resort page; successful acceptance avoids a redundant check.
 - One browser worker is sufficient for the single E2E scenario and avoids unnecessary concurrent traffic against the production site.
@@ -101,11 +106,13 @@ The assertion intentionally excludes **Est. Total** and does not calculate taxes
 
 This test runs against the live production website, so room availability, page content, and response times can vary. Condition-based waits handle normal asynchronous loading, but the test cannot guarantee that a directly bookable room will be available for the generated dates.
 
-- Calendar navigation is limited to three forward month advances per date selection. There is no alternate-date search if the requested dates are unavailable.
+- If no directly bookable room is available for the generated stay, the test does not search alternative dates.
 - Selection requires a visible, enabled direct **Add to Cart** action; a separate bed-option selection flow is not implemented.
 - Selectors and text parsing expect English UI text and amounts using commas for grouping and a decimal point.
 - On failure, diagnostic artifacts including a screenshot, page HTML, and URL/body text are saved under the git-ignored `artifacts/` directory.
 
 ## Test recording
 
-**To be added before submission:** a recording of the complete E2E test execution.
+The recording below demonstrates the complete automated E2E scenario, from hotel selection through cart verification and successful test completion.
+
+[▶ View the E2E test execution](https://drive.google.com/file/d/1cqE-PSqr52pVksv32ib9aO4vjyoibaLy/view?usp=sharing)
