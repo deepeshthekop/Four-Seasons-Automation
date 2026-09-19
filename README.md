@@ -41,7 +41,7 @@ A JavaScript/WebdriverIO E2E framework for the QA Automation Engineer technical 
         └── room-cart.e2e.js
 ```
 
-Pages own page-specific interactions, including the resort calendar. Components handle consent and the cart overlay. Booking data contains the scenario inputs and future-date construction; the pricing utility calculates the expected amount range. The spec coordinates the flow and assertions.
+Pages own page-specific interactions, including the resort calendar. Components handle consent and the cart overlay. Booking data contains the scenario inputs and future-date construction; the pricing utility calculates the acceptable cart room-amount range from the displayed average nightly price. The spec coordinates the flow and assertions.
 
 ## Prerequisites and setup
 
@@ -76,7 +76,7 @@ The GitHub Actions workflow in `.github/workflows/e2e.yml` installs dependencies
 
 Native headless execution returned Access Denied during local verification against Four Seasons, so CI uses normal headed Chrome with the Xvfb virtual display. The complete E2E scenario has been successfully verified on the GitHub-hosted Ubuntu runner.
 
-It runs on pushes to `main`, pull requests targeting `main`, manual dispatch, and Mondays at 07:17 UTC. The weekly schedule is an example scheduled execution against the live production website. If the E2E step fails, available `artifacts/` diagnostics are uploaded; missing diagnostics do not cause another failure.
+It runs on pushes to `main`, pull requests targeting `main`, manual dispatch, and Mondays at 11:00 UTC (7:00 AM Toronto during daylight-saving time). The weekly schedule is an example scheduled execution against the live production website. If the E2E step fails, available `artifacts/` diagnostics are uploaded; missing diagnostics do not cause another failure.
 
 ## Design decisions
 
@@ -89,9 +89,11 @@ It runs on pushes to `main`, pull requests targeting `main`, manual dispatch, an
 
 ## Pricing verification
 
-The selected rate displays an average nightly price at limited precision, while the cart can retain cents for the whole stay. Direct equality would therefore be incorrect.
+The accommodations page displays an average nightly price at limited precision, while the cart displays the room amount for the full stay with cents. Directly multiplying the displayed average by the number of nights can therefore differ from the cart amount.
 
-The test captures the displayed nightly price and currency before adding the room. It derives the rounding interval from the number of displayed decimal places, then scales that interval by the number of nights. The cart's room amount must be within that range, and its currency must match exactly; no currency is forced.
+During investigation, the Four Seasons reservation response confirmed that pricing retains more precision than is displayed on the accommodations page. For example, one rate returned an average nightly price of CAD 1,612.48 and a two-night room total of CAD 3,224.97, while the UI displayed the average nightly price as CAD 1,612.
+
+The E2E test remains a black-box UI test and does not depend on the reservation API. It captures the displayed average nightly price and currency before adding the room, derives an acceptable rounding interval from the displayed precision, and scales that interval by the number of nights. The cart's room amount must fall within that range, and its currency must match exactly.
 
 The assertion intentionally excludes **Est. Total** and does not calculate taxes, fees, or service charges, which represent a different pricing concept.
 
