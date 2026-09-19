@@ -64,7 +64,7 @@ npm ci
 | `npm run format`       | Format project files with Prettier                    |
 | `npm run format:check` | Verify formatting without changing files              |
 
-Local `npm run wdio` uses headed Chrome. Native headless mode remains optional on macOS/Linux:
+Local `npm run wdio` uses headed Chrome. A native headless mode is available for experimentation on macOS/Linux:
 
 ```sh
 HEADLESS=true npm run wdio
@@ -81,11 +81,11 @@ It runs on pushes to `main`, pull requests targeting `main`, manual dispatch, an
 ## Design decisions
 
 - Page objects and components keep UI interactions separate from test assertions.
-- Dates are calculated relative to today; no fixed calendar dates or fixed room inventory are required.
+- Dates are calculated relative to today, and the test does not depend on a specific room always being available.
 - The room and rate are captured from the same card as the selected bookable action.
 - Condition-based waits cover visibility, enabled controls, navigation, loading indicators, and cart updates; there are no fixed sleeps.
 - Consent is accepted when present. If initially absent, it is checked again on the resort page; successful acceptance avoids a redundant check.
-- One browser worker keeps this single scenario sequential and limits concurrent traffic against the production site.
+- One browser worker is sufficient for the single E2E scenario and avoids unnecessary concurrent traffic against the production site.
 
 ## Pricing verification
 
@@ -99,7 +99,7 @@ The assertion intentionally excludes **Est. Total** and does not calculate taxes
 
 ## Reliability and limitations
 
-This test exercises the live production site. Inventory, content, network response times, and third-party UI such as consent can vary. Explicit readiness conditions handle asynchronous loading, but cannot guarantee inventory for the chosen dates.
+This test runs against the live production website, so room availability, page content, and response times can vary. Condition-based waits handle normal asynchronous loading, but the test cannot guarantee that a directly bookable room will be available for the generated dates.
 
 - Calendar navigation is limited to three forward month advances per date selection. There is no alternate-date search if the requested dates are unavailable.
 - Selection requires a visible, enabled direct **Add to Cart** action; a separate bed-option selection flow is not implemented.
