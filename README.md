@@ -81,7 +81,7 @@ The GitHub Actions workflow in `.github/workflows/e2e.yml` installs dependencies
 
 Native headless execution returned Access Denied during local verification against Four Seasons, so CI uses normal headed Chrome with the Xvfb virtual display. The complete E2E scenario has been successfully verified on the GitHub-hosted Ubuntu runner.
 
-It runs on pushes to `main`, pull requests targeting `main`, manual dispatch, and Mondays at 11:00 UTC (7:00 AM Toronto during daylight-saving time). The weekly schedule is an example scheduled execution against the live production website. If the E2E step fails, available `artifacts/` diagnostics are uploaded; missing diagnostics do not cause another failure.
+It runs on pushes to `main`, pull requests targeting `main`, manual dispatch, and Tuesdays at 11:17 UTC (7:17 AM Toronto during daylight-saving time). The weekly schedule is an example scheduled execution against the live production website. If the E2E step fails, available `artifacts/` diagnostics are uploaded; missing diagnostics do not cause another failure.
 
 ## Design decisions
 
