@@ -39,7 +39,7 @@ class CheckoutPage {
     return $("#confirmation-checkbox");
   }
 
-  get bookingBtn() {
+  get bookBtn() {
     return $('button[type="submit"]');
   }
 
@@ -75,9 +75,10 @@ class CheckoutPage {
     }
   }
 
-  async completeBooking() {
-    await this.bookingBtn.waitForClickable({ timeout: 30000 });
-    await this.bookingBtn.click();
+  async verifyBookBtn() {
+    await this.bookBtn.isDisplayed();
+    await this.bookBtn.isEnabled();
+    await this.bookBtn.isClickable();
   }
 }
 

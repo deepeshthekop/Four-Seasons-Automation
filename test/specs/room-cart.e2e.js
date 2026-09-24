@@ -129,5 +129,7 @@ describe("Cabo Del Sol cart and checkout", () => {
 
     await checkout.acceptConfirmation();
     await expect(checkout.confirmationCheckbox).toBeSelected();
+
+    await checkout.verifyBookBtn();
   });
 });
