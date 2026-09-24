@@ -43,7 +43,7 @@ class CheckoutPage {
     return $('button[type="submit"]');
   }
 
-  async tapEnhancementsBtn() {
+  async continueFromEnhancements() {
     await this.enhancementsBtn.waitForClickable({ timeout: 30000 });
     await this.enhancementsBtn.click();
   }

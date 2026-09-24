@@ -8,8 +8,8 @@ import { booking, futureStay } from "../data/booking.data.js";
 import { stayRoomAmountRange } from "../utils/pricing.js";
 import { guest } from "../data/checkout.data.js";
 
-describe("Cabo Del Sol room cart", () => {
-  it("shows the selected room and rate in the cart with pricing consistent with the displayed nightly rate", async () => {
+describe("Cabo Del Sol cart and checkout", () => {
+  it("verifies the selected room, rate, and cart pricing, then fills checkout details and accepts confirmation without submitting a booking", async () => {
     const stay = futureStay(booking.daysAhead, booking.nights);
 
     console.log(`Stay: ${stay.arrival} to ${stay.departure}`);
@@ -109,7 +109,7 @@ describe("Cabo Del Sol room cart", () => {
     expect(roomAmount).toBeLessThan(maximum);
 
     await cart.clickCheckoutLink();
-    await checkout.tapEnhancementsBtn();
+    await checkout.continueFromEnhancements();
 
     await checkout.waitForBookingForm();
 
@@ -122,6 +122,9 @@ describe("Cabo Del Sol room cart", () => {
 
     await checkout.fillGuestPaymentDetails(guest);
     await expect(checkout.nameOnCard).toHaveValue(guest.nameOnCard);
+    await expect(checkout.cardNumber).toHaveValue(guest.cardNumber, {
+      replace: [/\s/g, ""],
+    });
     await expect(checkout.expirationDate).toHaveValue(guest.expirationDate);
 
     await checkout.acceptConfirmation();

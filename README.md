@@ -5,7 +5,7 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES%20Modules-F7DF1E?logo=javascript&logoColor=black)
 [![CI](https://github.com/deepeshthekop/Four-Seasons-Automation/actions/workflows/e2e.yml/badge.svg)](https://github.com/deepeshthekop/Four-Seasons-Automation/actions/workflows/e2e.yml)
 
-A JavaScript/WebdriverIO E2E framework for the QA Automation Engineer technical assessment. The single scenario covers the required Four Seasons Resort Cabo Del Sol booking/cart flow on the public production website. It stops at cart verification without completing a booking or submitting payment.
+A JavaScript/WebdriverIO E2E framework for the QA Automation Engineer technical assessment. The single scenario covers the Four Seasons Resort Cabo Del Sol cart and checkout flow on the public production website. It verifies the cart, fills guest and payment details, and selects the confirmation checkbox. It stops before submitting a booking.
 
 ## Automated scenario
 
@@ -16,6 +16,9 @@ A JavaScript/WebdriverIO E2E framework for the QA Automation Engineer technical 
 5. Select the first visible, enabled **Add to Cart** action, capturing its room name, rate plan, displayed average nightly price, and currency before clicking.
 6. Wait for the Discover page and updated cart indicator, then open the cart.
 7. Verify the property, selected room and rate, occupancy (two adults, no children), currency, and pricing consistency.
+8. Open checkout and continue past enhancements to the booking form.
+9. Fill and verify guest contact and payment details, ignoring whitespace when comparing the card number.
+10. Select and verify the confirmation checkbox, then end the test without submitting a booking.
 
 ## Tech stack
 
@@ -34,19 +37,21 @@ A JavaScript/WebdriverIO E2E framework for the QA Automation Engineer technical 
     ├── pages/
     │   ├── hotel-directory.page.js
     │   ├── resort.page.js
-    │   └── accommodations.page.js
+    │   ├── accommodations.page.js
+    │   └── checkout.page.js
     ├── components/
     │   ├── consent.component.js
     │   └── cart.component.js
     ├── data/
-    │   └── booking.data.js
+    │   ├── booking.data.js
+    │   └── checkout.data.js
     ├── utils/
     │   └── pricing.js
     └── specs/
         └── room-cart.e2e.js
 ```
 
-Pages own page-specific interactions, including the resort calendar. Components handle consent and the cart overlay. Booking data contains the scenario inputs and future-date construction; the pricing utility calculates the acceptable cart room-amount range from the displayed average nightly price. The spec coordinates the flow and assertions.
+Pages own page-specific interactions, including the resort calendar and checkout form. Components handle consent and the cart overlay. Booking data contains the scenario inputs and future-date construction; checkout data contains the guest and payment inputs. The pricing utility calculates the acceptable cart room-amount range from the displayed average nightly price. The spec coordinates the flow and assertions.
 
 ## Prerequisites and setup
 
@@ -113,6 +118,6 @@ This test runs against the live production website, so room availability, page c
 
 ## Test recording
 
-The recording below demonstrates the complete automated E2E scenario, from hotel selection through cart verification and successful test completion.
+The recording below demonstrates the original scenario, from hotel selection through cart verification. It predates the checkout extension.
 
 [▶ View the E2E test execution](https://drive.google.com/file/d/1cqE-PSqr52pVksv32ib9aO4vjyoibaLy/view?usp=sharing)
