@@ -48,6 +48,11 @@ class CheckoutPage {
     await this.enhancementsBtn.click();
   }
 
+  async waitForBookingForm() {
+    await this.firstName.waitForDisplayed({ timeout: 30000 });
+    await this.firstName.waitForEnabled({ timeout: 30000 });
+  }
+
   async fillGuestDetails(guest) {
     await this.firstName.setValue(guest.firstName);
     await this.lastName.setValue(guest.lastName);
@@ -63,6 +68,8 @@ class CheckoutPage {
   }
 
   async acceptConfirmation() {
+    await this.confirmationCheckbox.waitForClickable({ timeout: 30000 });
+
     if (!(await this.confirmationCheckbox.isSelected())) {
       await this.confirmationCheckbox.click();
     }

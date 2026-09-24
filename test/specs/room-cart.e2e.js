@@ -123,8 +123,21 @@ describe("Cabo Del Sol room cart", () => {
 
     await cart.clickCheckoutLink();
     await checkout.tapEnhancementsBtn();
+
+    await checkout.waitForBookingForm();
+
     await checkout.fillGuestDetails(guest);
+    await expect(checkout.firstName).toHaveValue(guest.firstName);
+    await expect(checkout.lastName).toHaveValue(guest.lastName);
+    await expect(checkout.email).toHaveValue(guest.email);
+    await expect(checkout.phone).toHaveValue(guest.phone);
+    await expect(checkout.country).toHaveValue(guest.countryCode);
+
     await checkout.fillGuestPaymentDetails(guest);
+    await expect(checkout.nameOnCard).toHaveValue(guest.nameOnCard);
+    await expect(checkout.expirationDate).toHaveValue(guest.expirationDate);
+
     await checkout.acceptConfirmation();
+    await expect(checkout.confirmationCheckbox).toBeSelected();
   });
 });
