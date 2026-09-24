@@ -32,7 +32,7 @@ describe("Cabo Del Sol room cart", () => {
     await resort.setStay(stay);
 
     // Verify that the resort page shows the correct stay dates in the summary
-    await expect(resort.dates).toHaveText( 
+    await expect(resort.dates).toHaveText(
       expect.stringContaining(stay.summary),
     );
 
@@ -44,7 +44,7 @@ describe("Cabo Del Sol room cart", () => {
     await expect($("h1")).toHaveText("Cabo San Lucas Luxury Accommodations", {
       ignoreCase: true,
     });
-    
+
     /*
     Verify that the booking information we selected on the resort page 
     was correctly carried into the accommodations/results page URL.
@@ -64,7 +64,7 @@ describe("Cabo Del Sol room cart", () => {
     expect(
       search.get("generalReservationForm.guestCountPerRoom[0].childCount"),
     ).toBe(String(booking.children));
-    
+
     // Add the first available room to the cart and capture its details for later verification
     // Selected variable will contain the room name, rate plan, nightly price, and currency.
     const selected = await accommodations.addAvailableRoom();
@@ -100,7 +100,7 @@ describe("Cabo Del Sol room cart", () => {
       children: booking.children,
     });
     expect(actual.currency).toBe(selected.currency);
-    
+
     /*
     Account for the displayed average nightly price being rounded when validating the 
     full-stay room amount in the cart.
@@ -121,10 +121,10 @@ describe("Cabo Del Sol room cart", () => {
     expect(roomAmount).toBeGreaterThanOrEqual(minimum);
     expect(roomAmount).toBeLessThan(maximum);
 
-    await cart.clickCheckout();
+    await cart.clickCheckoutLink();
     await checkout.tapEnhancementsBtn();
     await checkout.fillGuestDetails(guest);
     await checkout.fillGuestPaymentDetails(guest);
-
+    await checkout.acceptConfirmation();
   });
 });

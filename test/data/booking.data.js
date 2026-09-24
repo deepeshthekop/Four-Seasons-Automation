@@ -14,19 +14,19 @@ export const booking = {
 // Same two dates, but represented in 3 differente ways because 3 different parts of the website need them.
 export function futureStay(daysAhead, nights) {
   const arrival = new Date(); // Month DD, YYYY + current time
-  arrival.setHours(12, 0, 0, 0); 
+  arrival.setHours(12, 0, 0, 0);
   // Set time to 12:00 PM, noon
   // For safe internal time when manipulating dates to avoid timezone/boundary bugs
   arrival.setDate(arrival.getDate() + daysAhead);
 
-  const departure = new Date(arrival); 
+  const departure = new Date(arrival);
   // Create a new Date object for departure based on arrival
   departure.setDate(departure.getDate() + nights);
 
   // Format the dates for the reservation URL -> YYYY-MM-DD
   function formatUrlDate(date) {
     const year = date.getFullYear(); // 2026
-    const month = String(date.getMonth() + 1).padStart(2, "0"); 
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     // Months are zero-indexed, so we add 1 and pad with leading zero
     const day = String(date.getDate()).padStart(2, "0");
     // Pad the day with leading zero if necessary
@@ -47,7 +47,8 @@ export function futureStay(daysAhead, nights) {
 
   // Format the dates for the summary -> Month DD YYYY
   function formatSummaryDate(date) {
-    return date.toLocaleDateString("en-US", {
+    return date
+      .toLocaleDateString("en-US", {
         month: "long",
         day: "numeric",
         year: "numeric",

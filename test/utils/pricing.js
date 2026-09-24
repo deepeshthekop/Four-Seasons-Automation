@@ -9,16 +9,16 @@ Cart room amount:        CAD 3,511.79
 */
 
 export function stayRoomAmountRange(displayedNightlyPrice, nights) {
-  const nightlyText = displayedNightlyPrice.replaceAll(",", ""); 
+  const nightlyText = displayedNightlyPrice.replaceAll(",", "");
   // Remove commas for parsing
-  const nightlyPrice = Number(nightlyText); 
+  const nightlyPrice = Number(nightlyText);
   // Convert to number for calculations
 
-  const priceParts = nightlyText.split("."); 
+  const priceParts = nightlyText.split(".");
   // Split into whole and decimal parts
   let decimalPlaces = 0;
   if (priceParts.length > 1) {
-    decimalPlaces = priceParts[1].length; // 
+    decimalPlaces = priceParts[1].length; //
   }
   // If there is a decimal part, count its length to determine the number of decimal places
   // Our nightly price display is rounded to the nearest whole number, so we expect 0 decimal places.
@@ -33,7 +33,7 @@ export function stayRoomAmountRange(displayedNightlyPrice, nights) {
 
   const minimumNightlyPrice = nightlyPrice - halfDisplayUnit;
   const maximumNightlyPrice = nightlyPrice + halfDisplayUnit;
-   /* 
+  /* 
   The minimum and maximum nightly prices are calculated by subtracting and adding 
   the half display unit to the nightly price, respectively.
   */

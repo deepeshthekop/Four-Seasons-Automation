@@ -19,10 +19,10 @@ class ResortPage {
     const maximumMonthAdvances = 3;
 
     for (let month = 0; month < maximumMonthAdvances; month++) {
-      const targetDateIsVisible = await day.isDisplayed(); 
+      const targetDateIsVisible = await day.isDisplayed();
       // Check if the target date is visible in the current month view
       if (targetDateIsVisible) {
-        break; 
+        break;
         // If the target date is visible, exit the loop
       }
 
@@ -30,8 +30,8 @@ class ResortPage {
       // If the target date is not visible, click the "Next month" button to advance the calendar view
     }
 
-    await day.waitForEnabled({ timeout: 30000 }); 
-    // Wait for the target date to be enabled (clickable) before clicking it 
+    await day.waitForEnabled({ timeout: 30000 });
+    // Wait for the target date to be enabled (clickable) before clicking it
     await day.click();
   }
 
@@ -55,7 +55,6 @@ class ResortPage {
 
 // Create an instance of the ResortPage class and export it as the default export
 export default new ResortPage();
-
 
 // Getters are used here as some elements are reused acorss multiple methods.
 // Form is used in both setStay() and checkRates().

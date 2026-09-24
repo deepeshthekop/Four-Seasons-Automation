@@ -44,7 +44,6 @@ class HotelDirectoryPage {
 export default new HotelDirectoryPage();
 // This line creates an instance of our class and exports that instance
 
-
 /*
 open()
   ↓

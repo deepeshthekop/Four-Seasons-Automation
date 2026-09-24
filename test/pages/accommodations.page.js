@@ -9,7 +9,7 @@ class AccommodationsPage {
     await browser.waitUntil(
       async () => {
         const buttons = await this.addButtons;
-        return buttons.length > 0; 
+        return buttons.length > 0;
         // Wait until at least one Add to Cart button is present in the DOM
       },
       {
@@ -23,17 +23,17 @@ class AccommodationsPage {
     for (const button of buttons) {
       const isVisible = await button.isDisplayed();
       if (!isVisible) {
-        continue; 
+        continue;
         // Ignore this button and move to the next one if it's not visible
       }
 
       const isEnabled = await button.isEnabled();
       if (!isEnabled) {
-        continue; 
+        continue;
         // Ignore this button and move to the next one if it's not enabled
       }
 
-      const selected = await this.readRoomAndRate(button); 
+      const selected = await this.readRoomAndRate(button);
       // Read the room and rate information associated with this Add to Cart button
 
       console.log(
@@ -77,9 +77,9 @@ class AccommodationsPage {
       .$('a[href*="/accommodations/"][target="_blank"]')
       .getText();
     const ratePlan = await rateCard.$("p").getText();
-    const currency = priceMatch[1]; 
+    const currency = priceMatch[1];
     // Extract the currency code from the regex match
-    const nightlyPrice = priceMatch[2]; 
+    const nightlyPrice = priceMatch[2];
     // Extract the nightly price from the regex match
 
     // Validate that the room name and rate plan are not empty before returning the selected room information

@@ -6,10 +6,10 @@ It's a UI component/overlay that can appear on top of a page.
 class ConsentComponent {
   async dismissIfPresent() {
     const accept = $("#onetrust-accept-btn-handler");
-    
+
     // OneTrust loads asynchronously; absence is allowed, interaction failures are not.
     try {
-      await accept.waitForDisplayed({ timeout: 8000 }); 
+      await accept.waitForDisplayed({ timeout: 8000 });
       // Wait for the accept button to be displayed, with a timeout of 8 seconds
     } catch (error) {
       if (!(await accept.isDisplayed())) {
