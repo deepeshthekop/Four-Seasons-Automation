@@ -9,7 +9,8 @@ class AccommodationsPage {
     await browser.waitUntil(
       async () => {
         const buttons = await this.addButtons;
-        return buttons.length > 0;
+        return buttons.length > 0; 
+        // Wait until at least one Add to Cart button is present in the DOM
       },
       {
         timeout: 45000,
@@ -22,15 +23,18 @@ class AccommodationsPage {
     for (const button of buttons) {
       const isVisible = await button.isDisplayed();
       if (!isVisible) {
-        continue;
+        continue; 
+        // Ignore this button and move to the next one if it's not visible
       }
 
       const isEnabled = await button.isEnabled();
       if (!isEnabled) {
-        continue;
+        continue; 
+        // Ignore this button and move to the next one if it's not enabled
       }
 
-      const selected = await this.readRoomAndRate(button);
+      const selected = await this.readRoomAndRate(button); 
+      // Read the room and rate information associated with this Add to Cart button
 
       console.log(
         `Selected room:
@@ -47,6 +51,7 @@ class AccommodationsPage {
   }
 
   async readRoomAndRate(button) {
+    // Use XPath to locate the room and rate cards associated with the Add to Cart button.
     // Ancestors keep the captured room and rate scoped to this Add to Cart button.
     const roomCardSelector =
       './ancestor::div[contains(concat(" ", normalize-space(@class), " "), " FilteredColumnsList-item ")][1]';
@@ -56,6 +61,7 @@ class AccommodationsPage {
     const rateCard = await button.$(rateCardSelector);
     const priceText = await rateCard.getText();
 
+    // Use a regex to extract the currency and nightly price from the text.
     // Example: "Avg. price per night\nCAD 2,549"
     const priceMatch = priceText.match(
       /Avg\. price per night\s+([A-Z]{3})\s+([\d,]+(?:\.\d+)?)/,
@@ -66,13 +72,17 @@ class AccommodationsPage {
       );
     }
 
+    // Read the room name and rate plan from the respective cards
     const roomName = await roomCard
       .$('a[href*="/accommodations/"][target="_blank"]')
       .getText();
     const ratePlan = await rateCard.$("p").getText();
-    const currency = priceMatch[1];
-    const nightlyPrice = priceMatch[2];
+    const currency = priceMatch[1]; 
+    // Extract the currency code from the regex match
+    const nightlyPrice = priceMatch[2]; 
+    // Extract the nightly price from the regex match
 
+    // Validate that the room name and rate plan are not empty before returning the selected room information
     if (!roomName || !ratePlan) {
       throw new Error("Selected room/rate identity is empty");
     }
