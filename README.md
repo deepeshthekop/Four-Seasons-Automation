@@ -1,11 +1,11 @@
-# Four Seasons QA Automation Assessment
+# Four Seasons Automation
 
 ![WebdriverIO](https://img.shields.io/badge/WebdriverIO-9-EA5906?logo=webdriverio&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-24-339933?logo=nodedotjs&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES%20Modules-F7DF1E?logo=javascript&logoColor=black)
 [![CI](https://github.com/deepeshthekop/Four-Seasons-Automation/actions/workflows/e2e.yml/badge.svg)](https://github.com/deepeshthekop/Four-Seasons-Automation/actions/workflows/e2e.yml)
 
-A JavaScript/WebdriverIO E2E framework for the QA Automation Engineer technical assessment. The single scenario covers the Four Seasons Resort Cabo Del Sol cart and checkout flow on the public production website. It verifies the cart, fills guest and payment details, and selects the confirmation checkbox. It stops before submitting a booking.
+A JavaScript/WebdriverIO E2E framework for the Four Seasons website. The single scenario covers the Four Seasons Resort Cabo Del Sol cart and checkout flow on the public production website. It verifies the cart, fills guest and payment details, and selects the confirmation checkbox. It stops before submitting a booking.
 
 ## Automated scenario
 
