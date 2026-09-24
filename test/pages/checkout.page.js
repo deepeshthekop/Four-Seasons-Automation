@@ -1,41 +1,69 @@
 class CheckoutPage {
-    get bookingBtn() {
+    get enhancementsBtn() {
         return $('button[data-cy="EnhanceViewContinueButton"]');
     }
 
-    get PrimaryGuestFirstName() {
+    get firstName() {
         return $('#primaryFirstName');
     }
 
-    get PrimaryGuestLastName() {
+    get lastName() {
         return $('#primaryLastName');
     }
 
-    get PrimaryGuestEmail() {
+    get email() {
         return $('#primaryEmail');
     }
 
-    get PrimaryGuestPhone() {
+    get phone() {
         return $('#primaryPhone');
     }
 
-    get PrimaryGuestCountry() {
+    get country() {
         return $('#primaryCountry');
     }
 
-    get PrimaryGuestNameOnCard() {
+    get nameOnCard() {
         return $('#paymentName');
     }
 
-    get PrimaryGuestCardNumber() {
+    get cardNumber() {
         return $('#paymentCardNumber');
     }
 
+    get expirationDate() {
+        return $('#paymentExpiry');
+    }
+
+    get confirmationCheckbox() {
+        return $('#confirmationCheckbox');
+    }
+
+    get bookingBtn() {
+        return $('button[type="submit"]');
+    }
+
+    async tapEnhancementsBtn() {
+        await this.enhancementsBtn.waitForClickable({ timeout: 30000 });
+        await this.enhancementsBtn.click();
+    }
+
+    async fillGuestDetails(guest) {
+        await this.firstName.setValue(guest.firstName);
+        await this.lastName.setValue(guest.lastName);
+        await this.email.setValue(guest.email);
+        await this.phone.setValue(guest.phone);
+        await this.country.click();
+        await this.country.selectByVisibleText(guest.country);
+    }
+
+    async fillGuestPaymentDetails(guest) {
+        await this.nameOnCard.setValue(guest.nameOnCard);
+        await this.cardNumber.setValue(guest.cardNumber);
+        await this.expirationDate.setValue(guest.expirationDate);
+    }
 
     async completeBooking() {
-        await 
-        
-        
         await this.bookingBtn.waitForClickable({ timeout: 30000 });
         await this.bookingBtn.click();
     }

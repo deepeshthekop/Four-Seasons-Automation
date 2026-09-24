@@ -3,9 +3,10 @@ import resort from "../pages/resort.page.js";
 import accommodations from "../pages/accommodations.page.js";
 import cart from "../components/cart.component.js";
 import consent from "../components/consent.component.js";
+import checkout from "../pages/checkout.page.js";
 import { booking, futureStay } from "../data/booking.data.js";
 import { stayRoomAmountRange } from "../utils/pricing.js";
-import checkout from "../pages/checkout.page.js";
+import { guest } from "../data/checkout.data.js";
 
 describe("Cabo Del Sol room cart", () => {
   it("shows the selected room and rate in the cart with pricing consistent with the displayed nightly rate", async () => {
@@ -120,10 +121,10 @@ describe("Cabo Del Sol room cart", () => {
     expect(roomAmount).toBeGreaterThanOrEqual(minimum);
     expect(roomAmount).toBeLessThan(maximum);
 
-    await checkout.bookingBtn.click();
-
-    
-
+    await cart.clickCheckout();
+    await checkout.tapEnhancementsBtn();
+    await checkout.fillGuestDetails(guest);
+    await checkout.fillGuestPaymentDetails(guest);
 
   });
 });

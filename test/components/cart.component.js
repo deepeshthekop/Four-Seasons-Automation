@@ -4,9 +4,14 @@ class CartComponent {
     return $('[role="dialog"][aria-label="User Panel"]');
   }
 
-  // Cart tab
+  // Cart tab inside the user panel
   get tab() {
     return this.panel.$("#cart-tab");
+  }
+
+  // Checkout button inside the cart panel
+  get checkoutBtn() {
+    return this.panel.$("a=Check out itinerary");
   }
 
   // Open the cart and wait for the cart contents to be ready.
@@ -137,6 +142,11 @@ class CartComponent {
     }
 
     throw new Error(`Cannot read cart occupancy: ${text}`);
+  }
+
+  async clickCheckout() {
+    await this.checkoutBtn.waitForClickable({ timeout: 30000 });
+    await this.checkoutBtn.click();
   }
 }
 
