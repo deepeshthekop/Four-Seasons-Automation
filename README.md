@@ -17,7 +17,7 @@ A JavaScript/WebdriverIO E2E framework for the QA Automation Engineer technical 
 6. Wait for the Discover page and updated cart indicator, then open the cart.
 7. Verify the property, selected room and rate, occupancy (two adults, no children), currency, and pricing consistency.
 8. Open checkout and continue past enhancements to the booking form.
-9. Fill and verify guest contact and payment details, ignoring whitespace when comparing the card number.
+9. Fill and verify guest contact and payment details.
 10. Select and verify the confirmation checkbox, then end the test without submitting a booking.
 
 ## Tech stack
@@ -115,9 +115,3 @@ This test runs against the live production website, so room availability, page c
 - Selection requires a visible, enabled direct **Add to Cart** action; a separate bed-option selection flow is not implemented.
 - Selectors and text parsing expect English UI text and amounts using commas for grouping and a decimal point.
 - On failure, diagnostic artifacts including a screenshot, page HTML, and URL/body text are saved under the git-ignored `artifacts/` directory.
-
-## Test recording
-
-The recording below demonstrates the original scenario, from hotel selection through cart verification. It predates the checkout extension.
-
-[▶ View the E2E test execution](https://drive.google.com/file/d/1cqE-PSqr52pVksv32ib9aO4vjyoibaLy/view?usp=sharing)
