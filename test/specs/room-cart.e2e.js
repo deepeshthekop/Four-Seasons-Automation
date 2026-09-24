@@ -31,7 +31,6 @@ describe("Cabo Del Sol room cart", () => {
 
     await resort.setStay(stay);
 
-    // Verify that the resort page shows the correct stay dates in the summary
     await expect(resort.dates).toHaveText(
       expect.stringContaining(stay.summary),
     );
@@ -45,10 +44,6 @@ describe("Cabo Del Sol room cart", () => {
       ignoreCase: true,
     });
 
-    /*
-    Verify that the booking information we selected on the resort page 
-    was correctly carried into the accommodations/results page URL.
-    */
     const search = new URL(await browser.getUrl()).searchParams;
 
     expect(search.get("generalReservationForm.locationId")).toBe(
@@ -65,8 +60,6 @@ describe("Cabo Del Sol room cart", () => {
       search.get("generalReservationForm.guestCountPerRoom[0].childCount"),
     ).toBe(String(booking.children));
 
-    // Add the first available room to the cart and capture its details for later verification
-    // Selected variable will contain the room name, rate plan, nightly price, and currency.
     const selected = await accommodations.addAvailableRoom();
 
     await cart.open();
@@ -74,11 +67,6 @@ describe("Cabo Del Sol room cart", () => {
     await expect(cart.tab).toHaveText("Cart (1)");
     await expect(cart.panel.$("h3")).toHaveText(booking.propertyName);
 
-    /* 
-    Verify that the room and rate in the cart match what we selected on the 
-    accommodations page, and that the displayed full-stay room amount is consistent 
-    with the nightly price and number of nights booked.
-    */
     const actual = await cart.readRoom();
 
     console.log(
@@ -90,7 +78,6 @@ describe("Cabo Del Sol room cart", () => {
     );
 
     // The room name in the cart includes the rate plan, so we need to extract just the room name for comparison.
-    // Split on " - " and take the first part, which is the room name.
     const cartRoomName = actual.roomName.split(" - ")[0];
 
     expect(cartRoomName).toBe(selected.roomName);

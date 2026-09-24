@@ -9,28 +9,20 @@ export const booking = {
   nights: 2,
 };
 
-// Calculate arrival and departure dates dynamically.
-// Return those dates in all the formats our test needs.
-// Same two dates, but represented in 3 differente ways because 3 different parts of the website need them.
 export function futureStay(daysAhead, nights) {
-  const arrival = new Date(); // Month DD, YYYY + current time
+  const arrival = new Date();
   arrival.setHours(12, 0, 0, 0);
-  // Set time to 12:00 PM, noon
   // For safe internal time when manipulating dates to avoid timezone/boundary bugs
   arrival.setDate(arrival.getDate() + daysAhead);
 
   const departure = new Date(arrival);
-  // Create a new Date object for departure based on arrival
   departure.setDate(departure.getDate() + nights);
 
   // Format the dates for the reservation URL -> YYYY-MM-DD
   function formatUrlDate(date) {
-    const year = date.getFullYear(); // 2026
+    const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
-    // Months are zero-indexed, so we add 1 and pad with leading zero
     const day = String(date.getDate()).padStart(2, "0");
-    // Pad the day with leading zero if necessary
-    // padStart(2, "0") ensures the string is at least 2 characters long, adding "0" to the start if it's shorter
 
     return `${year}-${month}-${day}`;
   }
@@ -67,22 +59,3 @@ export function futureStay(daysAhead, nights) {
     summary: `Selected Dates ${arrivalSummary} to ${departureSummary}`,
   };
 }
-
-/*
-booking
-   │
-   ├── Which hotel?
-   ├── How many guests?
-   ├── How far in the future?
-   └── How many nights?
-                │
-                ▼
-          futureStay()
-                │
-       calculate real dates
-                │
-        ┌───────┼─────────┐
-        ▼       ▼         ▼
-       URL    Calendar   Summary
-    2026-...  Thursday... Selected Dates...
-*/
