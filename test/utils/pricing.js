@@ -1,3 +1,13 @@
+/*
+Given the rounded average nightly price shown on the accommodations page, 
+determine the valid range for the full-stay room amount in the cart.
+
+For example,
+Displayed nightly price: CAD 1,756
+Stay:                    2 nights
+Cart room amount:        CAD 3,511.79
+*/
+
 export function stayRoomAmountRange(displayedNightlyPrice, nights) {
   const nightlyText = displayedNightlyPrice.replaceAll(",", "");
   const nightlyPrice = Number(nightlyText);
@@ -9,11 +19,9 @@ export function stayRoomAmountRange(displayedNightlyPrice, nights) {
   }
 
   const displayUnit = 1 / 10 ** decimalPlaces;
+  // DisplayUnit = what is the smallest price difference this UI is capable of showing
   const halfDisplayUnit = displayUnit / 2;
 
-  // The nightly display is rounded, while the cart retains cents for the whole stay.
-  // Scale [price - half display unit, price + half display unit) by the nights;
-  // direct equality is invalid. This range excludes Est. Total and taxes/fees.
   const minimumNightlyPrice = nightlyPrice - halfDisplayUnit;
   const maximumNightlyPrice = nightlyPrice + halfDisplayUnit;
 

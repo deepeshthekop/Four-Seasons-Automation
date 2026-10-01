@@ -7,8 +7,12 @@ class CartComponent {
     return this.panel.$("#cart-tab");
   }
 
+  get checkoutLink() {
+    return this.panel.$("a=Check out itinerary");
+  }
+
   async open() {
-    // Adding a stay navigates to Discover. Wait for the new page and cart update.
+    // Adding a stay(room) navigates to Discover. Wait for the new page and cart update.
     await browser.waitUntil(
       async () => {
         const currentUrl = new URL(await browser.getUrl());
@@ -56,6 +60,7 @@ class CartComponent {
 
     // Example: "CAD 5,098.71"
     const priceMatch = priceText.match(/^([A-Z]{3})\s+([\d,]+(?:\.\d+)?)$/);
+
     if (!priceMatch) {
       throw new Error(`Cannot read cart room price: ${priceText}`);
     }
@@ -73,6 +78,7 @@ class CartComponent {
 
   readOccupancy(text) {
     const lines = text.split("\n");
+
     for (const line of lines) {
       const adultsMatch = line.match(/^(\d+) adults?\b/);
       if (!adultsMatch) {
@@ -80,10 +86,10 @@ class CartComponent {
       }
 
       const adults = Number(adultsMatch[1]);
+
       const childrenMatch = line.match(/(\d+) (?:children|child)\b/);
       let children = 0;
 
-      // The cart omits the child count when no children are included.
       if (childrenMatch) {
         children = Number(childrenMatch[1]);
       }
@@ -92,6 +98,11 @@ class CartComponent {
     }
 
     throw new Error(`Cannot read cart occupancy: ${text}`);
+  }
+
+  async clickCheckoutLink() {
+    await this.checkoutLink.waitForClickable({ timeout: 30000 });
+    await this.checkoutLink.click();
   }
 }
 

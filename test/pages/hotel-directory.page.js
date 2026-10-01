@@ -8,7 +8,6 @@ class HotelDirectoryPage {
       "#all-hotels-resorts-hotel-tab.IconTabContainer-page--active",
     );
     const northAmericaButton = directoryContent.$("button*=North America");
-
     await northAmericaButton.waitForDisplayed();
 
     const regionId = await northAmericaButton.getAttribute("aria-controls");
@@ -20,6 +19,7 @@ class HotelDirectoryPage {
     const northAmericaRegion = directoryContent.$(
       `[role="region"][id="${regionId}"]`,
     );
+
     const propertyLink = northAmericaRegion.$(`a=${name}`);
 
     await propertyLink.waitForDisplayed();
