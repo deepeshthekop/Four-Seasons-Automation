@@ -6,9 +6,9 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-  schedule:
-    # Every Tuesday at 11:17 UTC; example weekly production-site check.
-    - cron: "17 11 * * 2"
+  # schedule:
+  #   # Every Tuesday at 11:17 UTC; example weekly production-site check.
+  #   - cron: "17 11 * * 2"
 
 permissions:
   contents: read
